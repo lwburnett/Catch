@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "BasicMovementBase.h"
 #include "PrototypeMovementComponent.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CATCH_API UPrototypeMovementComponent : public UCharacterMovementComponent
+class CATCH_API UPrototypeMovementComponent : public UBasicMovementBase
 {
 	GENERATED_BODY()
 	
