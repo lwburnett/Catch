@@ -126,17 +126,17 @@ AutoTest.Net/
 [Ee]xpress/
 
 # DocProject is a documentation generator add-in
-DocProject/buildhelp/
-DocProject/Help/*.HxT
-DocProject/Help/*.HxC
-DocProject/Help/*.hhc
-DocProject/Help/*.hhk
-DocProject/Help/*.hhp
-DocProject/Help/Html2
-DocProject/Help/html
+UE4/DocProject/buildhelp/
+UE4/DocProject/Help/*.HxT
+UE4/DocProject/Help/*.HxC
+UE4/DocProject/Help/*.hhc
+UE4/DocProject/Help/*.hhk
+UE4/DocProject/Help/*.hhp
+UE4/DocProject/Help/Html2
+UE4/DocProject/Help/html
 
 # Click-Once directory
-publish/
+UE4/publish/
 
 # Publish Web Output
 *.[Pp]ublish.xml
@@ -149,7 +149,7 @@ publish/
 # Microsoft Azure Web App publish settings. Comment the next line if you want to
 # checkin your Azure Web App publish settings, but sensitive information contained
 # in these scripts will be unencrypted
-PublishScripts/
+UE4/PublishScripts/
 
 # NuGet Packages
 *.nupkg
@@ -164,18 +164,18 @@ PublishScripts/
 *.nuget.targets
 
 # Microsoft Azure Build Output
-csx/
+UE4/csx/
 *.build.csdef
 
 # Microsoft Azure Emulator
-ecf/
-rcf/
+UE4/ecf/
+UE4/rcf/
 
 # Windows Store app package directories and files
-AppPackages/
-BundleArtifacts/
-Package.StoreAssociation.xml
-_pkginfo.txt
+UE4/AppPackages/
+UE4/BundleArtifacts/
+UE4/Package.StoreAssociation.xml
+UE4/_pkginfo.txt
 
 # Visual Studio cache files
 # files ending in .cache can be ignored
@@ -192,21 +192,21 @@ ClientBin/
 *.jfm
 *.pfx
 *.publishsettings
-node_modules/
-orleans.codegen.cs
+UE4/node_modules/
+UE4/orleans.codegen.cs
 
 # Since there are multiple workflows, uncomment next line to ignore bower_components
 # (https://github.com/github/gitignore/pull/1529#issuecomment-104372622)
 #bower_components/
 
 # RIA/Silverlight projects
-Generated_Code/
+UE4/Generated_Code/
 
 # Backup & report files from converting an old project file
 # to a newer Visual Studio version. Backup files are not needed,
 # because we have git ;-)
 _UpgradeReport_Files/
-Backup*/
+UE4/Backup*/
 UpgradeLog*.XML
 UpgradeLog*.htm
 
@@ -220,7 +220,7 @@ UpgradeLog*.htm
 *.bim_*.settings
 
 # Microsoft Fakes
-FakesAssemblies/
+UE4/FakesAssemblies/
 
 # GhostDoc plugin setting file
 *.GhostDoc.xml
@@ -244,7 +244,7 @@ _Pvt_Extensions
 
 # Paket dependency manager
 .paket/paket.exe
-paket-files/
+UE4/paket-files/
 
 # FAKE - F# Make
 .fake/
@@ -306,23 +306,23 @@ __pycache__/
 *.VC.opendb
 
 # Precompiled Assets
-SourceArt/**/*.png
-SourceArt/**/*.tga
+UE4/SourceArt/**/*.png
+UE4/SourceArt/**/*.tga
 
 # Binary Files
-Binaries/*
-Plugins/*/Binaries/*
+UE4/Binaries/*
+UE4/Plugins/*/Binaries/*
 
 # Builds
-Build/*
+UE4/Build/*
 
 # Whitelist PakBlacklist-<BuildConfiguration>.txt files
-!Build/*/
-Build/*/**
-!Build/*/PakBlacklist*.txt
+!UE4/Build/*/
+UE4/Build/*/**
+!UE4/Build/*/PakBlacklist*.txt
 
 # Don't ignore icon files in Build
-!Build/**/*.ico
+!UE4/Build/**/*.ico
 
 # Built data for maps
 *_BuiltData.uasset
