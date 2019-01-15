@@ -35,15 +35,15 @@ protected:
 	virtual void OnNothingToLeft(){ }
 	virtual void OnLeftToNothing(){ }
 	virtual void OnLeftToBoth(){ }
-	// TODO: virtual void OnDoubleLeft() = 0;
+	// TODO: virtual void OnDoubleLeft();
 	virtual void OnNothingToRight(){ }
 	virtual void OnRightToNothing(){ }
 	virtual void OnRightToBoth(){ }
-	// TODO: virtual void OnDoubleRight() = 0;
+	// TODO: virtual void OnDoubleRight();
 
 	// TODO: do these make sense? 
-	// virtual void OnNothingToBoth() = 0;
-	// virtual void OnBothToNothing() = 0;
+	// virtual void OnNothingToBoth();
+	// virtual void OnBothToNothing();
 	virtual void OnBothToLeft(){ }
 	virtual void OnBothToRight(){ }
 };
