@@ -3,6 +3,11 @@
 #include "PrototypeMovementComponent.h"
 #include "GameFramework/Pawn.h"
 
+UPrototypeMovementComponent::UPrototypeMovementComponent() :
+		_movementInputScale(1.0)
+{
+}
+
 void UPrototypeMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -36,15 +41,14 @@ void UPrototypeMovementComponent::TickComponent(
 	switch(_moveState)
 	{
 	case EProtoMovementState::Idle:
-		_owner->AddMovementInput(FVector(0.0, 0.0, 0.0), 1.0);
 		break;
 
 	case EProtoMovementState::MovingLeft:
-		_owner->AddMovementInput(FVector(-1.0, 0.0, 0.0), 1.0);
+		_owner->AddMovementInput(FVector(-1.0, 0.0, 0.0), _movementInputScale);
 		break;
 
 	case EProtoMovementState::MovingRight:
-		_owner->AddMovementInput(FVector(1.0, 0.0, 0.0), 1.0);
+		_owner->AddMovementInput(FVector(1.0, 0.0, 0.0), _movementInputScale);
 		break;
 
 	default:

@@ -20,6 +20,7 @@ class CATCH_API UPrototypeMovementComponent : public UBasicMovementBase
 {
 	GENERATED_BODY()
 
+	UPrototypeMovementComponent();
 
 public:
 	void BeginPlay() override;
@@ -36,4 +37,7 @@ protected:
 private:
 	EProtoMovementState _moveState;
 	APawn* _owner;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float _movementInputScale;
 };
