@@ -36,6 +36,7 @@ void UPrototypeMovementComponent::TickComponent(
 	switch(_moveState)
 	{
 	case EProtoMovementState::Idle:
+		_owner->AddMovementInput(FVector(0.0, 0.0, 0.0), 1.0);
 		break;
 
 	case EProtoMovementState::MovingLeft:
@@ -73,4 +74,14 @@ void UPrototypeMovementComponent::OnLeftToNothing()
 void UPrototypeMovementComponent::OnRightToNothing()
 {
 	OnLeftToNothing();
+}
+
+void UPrototypeMovementComponent::OnBothToLeft()
+{
+	OnNothingToLeft();
+}
+
+void UPrototypeMovementComponent::OnBothToRight()
+{
+	OnNothingToRight();
 }

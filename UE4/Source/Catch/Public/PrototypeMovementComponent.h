@@ -30,6 +30,8 @@ protected:
 	void OnNothingToRight() override;
 	void OnLeftToNothing() override;
 	void OnRightToNothing() override;
+	void OnBothToLeft() override;
+	void OnBothToRight() override;
 
 private:
 	EProtoMovementState _moveState;
