@@ -2,7 +2,7 @@
 
 #include "PrototypeSpawnerComponent.h"
 #include "Engine/World.h"
-#include "TimerManager.h"
+#include "Projectile.h"
 
 // Sets default values for this component's properties
 UPrototypeSpawnerComponent::UPrototypeSpawnerComponent() :
@@ -41,8 +41,12 @@ void UPrototypeSpawnerComponent::Spawn()
 {
 	_lastSpawnTime = GetWorld()->GetTimeSeconds();
 
-	GetWorld()->SpawnActor<AActor>(
+	const auto projectile = GetWorld()->SpawnActor<AProjectile>(
 		_projectileBlueprint,
 		FVector(0,0,2200),
 		FRotator(0,0,0));
+
+	const FVector launch(1000, 0, 0);
+
+	projectile->Launch(launch);
 }

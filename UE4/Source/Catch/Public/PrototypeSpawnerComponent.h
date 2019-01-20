@@ -7,6 +7,8 @@
 #include "PrototypeSpawnerComponent.generated.h"
 
 
+class AProjectile;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CATCH_API UPrototypeSpawnerComponent : public UActorComponent
 {
@@ -29,7 +31,7 @@ private:
 	float _lastSpawnTime;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
-	TSubclassOf<AActor> _projectileBlueprint;
+	TSubclassOf<AProjectile> _projectileBlueprint;
 
 	// FIRST-PASS PROTOTYPE
 	void Spawn();
