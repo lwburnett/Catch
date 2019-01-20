@@ -5,7 +5,8 @@
 #include "TimerManager.h"
 
 // Sets default values for this component's properties
-UPrototypeSpawnerComponent::UPrototypeSpawnerComponent()
+UPrototypeSpawnerComponent::UPrototypeSpawnerComponent() :
+		_lastSpawnTime(0)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -38,6 +39,8 @@ void UPrototypeSpawnerComponent::TickComponent(
 
 void UPrototypeSpawnerComponent::Spawn()
 {
+	_lastSpawnTime = GetWorld()->GetTimeSeconds();
+
 	GetWorld()->SpawnActor<AActor>(
 		_projectileBlueprint,
 		FVector(0,0,2200),
