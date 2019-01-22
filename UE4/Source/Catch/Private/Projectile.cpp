@@ -22,6 +22,11 @@ AProjectile::AProjectile()
 
 void AProjectile::Launch(const FVector launchVector) const
 {
+	if(!ensure(_movementComponent))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No movement component found for projectile!"));
+		return;
+	}
 	_movementComponent->Activate();
 	_movementComponent->SetVelocityInLocalSpace(launchVector);
 }

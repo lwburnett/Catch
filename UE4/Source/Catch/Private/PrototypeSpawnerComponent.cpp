@@ -39,6 +39,12 @@ void UPrototypeSpawnerComponent::TickComponent(
 
 void UPrototypeSpawnerComponent::Spawn()
 {
+	if(!ensure(_projectileBlueprint))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No projectile blueprint found for spawner!"));
+		return;
+	}
+
 	_lastSpawnTime = GetWorld()->GetTimeSeconds();
 
 	const auto projectile = GetWorld()->SpawnActor<AProjectile>(
