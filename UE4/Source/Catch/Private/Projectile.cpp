@@ -31,21 +31,16 @@ void AProjectile::Launch(const FVector launchVector) const
 	_movementComponent->SetVelocityInLocalSpace(launchVector);
 }
 
+void AProjectile::OnHitReflectiveWall() const
+{
+	const auto currentVelocity = GetVelocity();
+	const auto targetVelocity = FVector(-1 * currentVelocity.X, currentVelocity.Y, currentVelocity.Z);
+	_movementComponent->SetVelocityInLocalSpace(targetVelocity);
+}
+
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-
-	_capsuleComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
-}
-
-void AProjectile::OnHit(
-	UPrimitiveComponent* hitComponent, 
-	AActor* otherActor,
-	UPrimitiveComponent* otherComponent, 
-	FVector normalImpulse, 
-	const FHitResult& hit)
-{
-	UE_LOG(LogTemp, Warning, TEXT("HIT"));
 }
 
