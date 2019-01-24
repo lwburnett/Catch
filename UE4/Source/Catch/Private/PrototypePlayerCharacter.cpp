@@ -18,11 +18,4 @@ APrototypePlayerCharacter::APrototypePlayerCharacter(const FObjectInitializer& O
 void APrototypePlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//_movementComponent = GetBasicMovementComponent();
-}
-
-UBasicMovementBase* APrototypePlayerCharacter::GetBasicMovementComponent() const
-{
-	return FindComponentByClass<UBasicMovementBase>();
 }

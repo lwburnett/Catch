@@ -3,19 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "PaperCharacter.h"
 #include "PrototypePlayerCharacter.generated.h"
 
 
-class UPaperSpriteComponent;
-class UBasicMovementBase;
 class UBoxComponent;
 
 /**
  * 
  */
 UCLASS()
-class CATCH_API APrototypePlayerCharacter : public ACharacter
+class CATCH_API APrototypePlayerCharacter : public APaperCharacter
 {
 	GENERATED_BODY()
 
@@ -31,6 +29,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere, category = "Components")
 	UBoxComponent* _boxComponent;
-
-	UBasicMovementBase* GetBasicMovementComponent() const;
 };
