@@ -22,6 +22,8 @@ public:
 
 	virtual void OnHitReflectiveWall() const;
 
+	virtual void OnCaught();
+
 protected:
 	// Called when the game starts or when spawned
 	void BeginPlay() override;

@@ -38,6 +38,12 @@ void AProjectile::OnHitReflectiveWall() const
 	_movementComponent->SetVelocityInLocalSpace(targetVelocity);
 }
 
+void AProjectile::OnCaught() 
+{
+	UE_LOG(LogTemp, Warning, TEXT("Caught!"));
+	Destroy();
+}
+
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {

@@ -2,12 +2,13 @@
 
 #include "PrototypePlayerCharacter.h"
 #include "PrototypeMovementComponent.h"
-#include "BasicMovementBase.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/Character.h"
+#include "Projectile.h"
 
 APrototypePlayerCharacter::APrototypePlayerCharacter(const FObjectInitializer& ObjectInitializer) :
-		Super(ObjectInitializer.SetDefaultSubobjectClass<UPrototypeMovementComponent>(CharacterMovementComponentName))
+		Super(ObjectInitializer.SetDefaultSubobjectClass<UPrototypeMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	PrimaryActorTick.bCanEverTick = false;
 
@@ -18,4 +19,21 @@ APrototypePlayerCharacter::APrototypePlayerCharacter(const FObjectInitializer& O
 void APrototypePlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	_boxComponent->OnComponentBeginOverlap.AddDynamic(this, &APrototypePlayerCharacter::OnCatch);
+}
+
+void APrototypePlayerCharacter::OnCatch(
+	UPrimitiveComponent* overlappedComponent, 
+	AActor* otherActor,
+	UPrimitiveComponent* otherComp, 
+	int32 otherBodyIndex, 
+	bool bFromSweep, 
+	const FHitResult& sweepResult)
+{
+	const auto projectile = Cast<AProjectile>(otherActor);
+	if (projectile)
+	{
+		projectile->OnCaught();
+	}
 }

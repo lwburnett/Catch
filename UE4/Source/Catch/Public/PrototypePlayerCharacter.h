@@ -7,6 +7,7 @@
 #include "PrototypePlayerCharacter.generated.h"
 
 
+struct FHitResult;
 class UBoxComponent;
 
 /**
@@ -23,10 +24,19 @@ class CATCH_API APrototypePlayerCharacter : public APaperCharacter
 protected:
 	// Called when the game starts or when spawned
 	void BeginPlay() override;
-	
+
 private:
 	//UBasicMovementBase* _movementComponent{};
 
 	UPROPERTY(VisibleAnywhere, category = "Components")
 	UBoxComponent* _boxComponent;
+
+	UFUNCTION(BlueprintCallable)
+	void OnCatch(
+		UPrimitiveComponent* overlappedComponent,
+		AActor* otherActor,
+		UPrimitiveComponent* otherComp,
+		int32 otherBodyIndex,
+		bool bFromSweep,
+		const FHitResult &sweepResult);
 };
