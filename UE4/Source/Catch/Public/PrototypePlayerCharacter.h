@@ -19,7 +19,7 @@ class CATCH_API APrototypePlayerCharacter : public APaperCharacter
 	GENERATED_BODY()
 
 	// SOME BULLSHIT TO GET AN ACHARACTER TO USE ANOTHER MOVEMENT COMPONENT WTF
-	APrototypePlayerCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	APrototypePlayerCharacter(const FObjectInitializer& objectInitializer = FObjectInitializer::Get());
 
 protected:
 	// Called when the game starts or when spawned

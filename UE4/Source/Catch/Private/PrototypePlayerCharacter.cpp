@@ -5,10 +5,11 @@
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/Character.h"
+#include "PrototypePlayerState.h"
 #include "Projectile.h"
 
-APrototypePlayerCharacter::APrototypePlayerCharacter(const FObjectInitializer& ObjectInitializer) :
-		Super(ObjectInitializer.SetDefaultSubobjectClass<UPrototypeMovementComponent>(ACharacter::CharacterMovementComponentName))
+APrototypePlayerCharacter::APrototypePlayerCharacter(const FObjectInitializer& objectInitializer) :
+		Super(objectInitializer.SetDefaultSubobjectClass<UPrototypeMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	PrimaryActorTick.bCanEverTick = false;
 
@@ -35,5 +36,7 @@ void APrototypePlayerCharacter::OnCatch(
 	if (projectile)
 	{
 		projectile->OnCaught();
+		auto playerState = Cast<APrototypePlayerState>(GetWorld()->GetFirstPlayerController()->PlayerState);
+		playerState->OnCatch();
 	}
 }
