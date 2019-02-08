@@ -3,6 +3,7 @@
 #include "PrototypeSpawnerComponent.h"
 #include "Engine/World.h"
 #include "Projectile.h"
+#include "PrototypeBehavior.h"
 
 // Sets default values for this component's properties
 UPrototypeSpawnerComponent::UPrototypeSpawnerComponent() :
@@ -12,7 +13,12 @@ UPrototypeSpawnerComponent::UPrototypeSpawnerComponent() :
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	_behavior.Reset(new PrototypeBehavior(10));
+}
+
+UPrototypeSpawnerComponent::~UPrototypeSpawnerComponent()
+{
+	_behavior.Release();
 }
 
 
@@ -22,6 +28,7 @@ void UPrototypeSpawnerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	_lastSpawnTime = GetWorld()->GetTimeSeconds();
+	_behavior->Activate(_lastSpawnTime);
 }
 
 
@@ -33,11 +40,15 @@ void UPrototypeSpawnerComponent::TickComponent(
 {
 	Super::TickComponent(deltaTime, tickType, thisTickFunction);
 
-	if (GetWorld()->GetTimeSeconds() - _lastSpawnTime > 2)
-		Spawn();
+	const auto now = GetWorld()->GetTimeSeconds();
+
+	if (_behavior->ShouldSpawn(now, _lastSpawnTime))
+	{
+		Spawn(_behavior->GetNextLaunchVector());
+	}
 }
 
-void UPrototypeSpawnerComponent::Spawn()
+void UPrototypeSpawnerComponent::Spawn(const FVector initialVelocity)
 {
 	if(!ensure(_projectileBlueprint))
 	{
@@ -52,7 +63,6 @@ void UPrototypeSpawnerComponent::Spawn()
 		FVector(0,0,2200),
 		FRotator(0,0,0));
 
-	const FVector launch(1000, 0, 0);
-
-	projectile->Launch(launch);
+	projectile->Launch(initialVelocity);
+	_behavior->NotifySpawned();
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "BehaviorBase.h"
 #include "PrototypeSpawnerComponent.generated.h"
 
 
@@ -17,6 +18,8 @@ class CATCH_API UPrototypeSpawnerComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UPrototypeSpawnerComponent();
+
+	~UPrototypeSpawnerComponent();
 
 protected:
 	// Called when the game starts
@@ -33,6 +36,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	TSubclassOf<AProjectile> _projectileBlueprint;
 
+
+	TUniquePtr<BehaviorBase> _behavior;
+
 	// FIRST-PASS PROTOTYPE
-	void Spawn();
+	void Spawn(FVector initialVelocity);
 };
