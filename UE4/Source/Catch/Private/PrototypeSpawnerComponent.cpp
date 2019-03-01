@@ -19,6 +19,7 @@ void UPrototypeSpawnerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//TODO: figure out adding and deleting strategy for behaviors (maybe use a behavior provider type pattern)
 	_behaviors.Emplace(new PrototypeBehavior(10));
 }
 
