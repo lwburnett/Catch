@@ -19,8 +19,6 @@ public:
 	// Sets default values for this component's properties
 	UPrototypeSpawnerComponent();
 
-	~UPrototypeSpawnerComponent();
-
 protected:
 	// Called when the game starts
 	void BeginPlay() override;
@@ -31,14 +29,9 @@ public:
 
 
 private:
-	float _lastSpawnTime;
-
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	TSubclassOf<AProjectile> _projectileBlueprint;
 
 
-	TUniquePtr<BehaviorBase> _behavior;
-
-	// FIRST-PASS PROTOTYPE
-	void Spawn(FVector initialVelocity);
+	TArray<TUniquePtr<BehaviorBase>> _behaviors;
 };

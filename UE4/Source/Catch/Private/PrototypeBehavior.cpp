@@ -5,18 +5,24 @@
 PrototypeBehavior::PrototypeBehavior(const int numToSpawn): BehaviorBase(numToSpawn), 
 		_interval(2.0)
 {
+	UE_LOG(LogTemp, Warning, TEXT("RASPBERRY"));
 }
 
-bool PrototypeBehavior::ShouldSpawn(const float timeSeconds, const float lastSpawnTime)
+bool PrototypeBehavior::ShouldSpawn()
 {
-	const auto baseShouldSpawn = BehaviorBase::ShouldSpawn(timeSeconds);
+	const auto baseShouldSpawn = BehaviorBase::ShouldSpawn();
 
-	const auto shouldSpawn = timeSeconds - lastSpawnTime;
+	const auto shouldSpawn = GetElapsedTimeSeconds() - GetLastSpawnTimeSeconds() > _interval;
 
-	return shouldSpawn >= _interval && baseShouldSpawn;
+	return baseShouldSpawn && shouldSpawn;
+}
+
+FVector PrototypeBehavior::GetNextSpawnVector(const float spawnXMin, const float spawnXMax, const float height)
+{
+	return { FMath::FRandRange(spawnXMin, spawnXMax), 0, height };
 }
 
 FVector PrototypeBehavior::GetNextLaunchVector()
 {
-	return FVector(1000, 0, 0);
+	return {1000, 0, 0};
 }

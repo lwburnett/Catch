@@ -15,8 +15,11 @@ public:
 
 	~PrototypeBehavior() = default;
 
-	bool ShouldSpawn(float timeSeconds, float lastSpawnTime) override;
+	bool ShouldSpawn() override;
 
+
+protected:
+	FVector GetNextSpawnVector(float spawnXMin, float spawnXMax, float height) override;
 	FVector GetNextLaunchVector() override;
 
 private:

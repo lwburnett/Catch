@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Projectile.h"
 
 /**
  * 
@@ -14,20 +15,23 @@ public:
 
 	virtual ~BehaviorBase() = default;
 
-	virtual void Activate(float timeSeconds);
+	virtual void Tick(float timeSeconds);
 
-	virtual bool ShouldSpawn(float timeSeconds, float lastSpawnTime = 0);
+	virtual bool ShouldSpawn();
 
-	virtual FVector GetNextLaunchVector() = 0;
-
-	void NotifySpawned();
+	void Spawn(
+		const TFunction<AProjectile*(FVector)>& spawnFunc);
 
 protected:
-	float GetActivationTime() const;
+	float GetElapsedTimeSeconds() const;
+	float GetLastSpawnTimeSeconds() const;
+
+	virtual FVector GetNextSpawnVector(float spawnXMin, float spawnXMax, float height);
+	virtual FVector GetNextLaunchVector();
 
 private:
-	float _activationTime;
-	bool _activated;
+	float _elapsedTimeSeconds;
 	int _numSpawned;
 	int _numToSpawn;
+	float _lastSpawnTime;
 };

@@ -6,19 +6,11 @@
 #include "PrototypeBehavior.h"
 
 // Sets default values for this component's properties
-UPrototypeSpawnerComponent::UPrototypeSpawnerComponent() :
-		_lastSpawnTime(0)
+UPrototypeSpawnerComponent::UPrototypeSpawnerComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	_behavior.Reset(new PrototypeBehavior(10));
-}
-
-UPrototypeSpawnerComponent::~UPrototypeSpawnerComponent()
-{
-	_behavior.Release();
 }
 
 
@@ -27,8 +19,7 @@ void UPrototypeSpawnerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_lastSpawnTime = GetWorld()->GetTimeSeconds();
-	_behavior->Activate(_lastSpawnTime);
+	_behaviors.Emplace(new PrototypeBehavior(10));
 }
 
 
@@ -40,29 +31,29 @@ void UPrototypeSpawnerComponent::TickComponent(
 {
 	Super::TickComponent(deltaTime, tickType, thisTickFunction);
 
-	const auto now = GetWorld()->GetTimeSeconds();
-
-	if (_behavior->ShouldSpawn(now, _lastSpawnTime))
+	for (const auto& behavior : _behaviors)
 	{
-		Spawn(_behavior->GetNextLaunchVector());
+		behavior->Tick(deltaTime);
+
+		if(behavior->ShouldSpawn())
+		{
+			if (!ensure(_projectileBlueprint))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("No projectile blueprint found for spawner!"));
+				continue;
+			}
+
+			const auto world = GetWorld();
+			const auto projectileBp = _projectileBlueprint;
+
+			behavior->Spawn(
+				[world, projectileBp](const FVector v)
+				{
+					return world->SpawnActor<AProjectile>(
+						projectileBp, 
+						v, 
+						FRotator(0.0, 0.0, 0.0));
+				});
+		}
 	}
-}
-
-void UPrototypeSpawnerComponent::Spawn(const FVector initialVelocity)
-{
-	if(!ensure(_projectileBlueprint))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No projectile blueprint found for spawner!"));
-		return;
-	}
-
-	_lastSpawnTime = GetWorld()->GetTimeSeconds();
-
-	const auto projectile = GetWorld()->SpawnActor<AProjectile>(
-		_projectileBlueprint,
-		FVector(0,0,2200),
-		FRotator(0,0,0));
-
-	projectile->Launch(initialVelocity);
-	_behavior->NotifySpawned();
 }
