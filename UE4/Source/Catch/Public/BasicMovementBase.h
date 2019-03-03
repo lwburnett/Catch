@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BasicMovementBase.generated.h"
 
@@ -16,34 +15,37 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
-	void HandleLeftPressed();
+	void HandleLeftPressed(float timeSeconds);
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
-	void HandleLeftReleased();
+	void HandleLeftReleased(float timeSeconds);
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
-	void HandleRightPressed();
+	void HandleRightPressed(float timeSeconds);
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
-	void HandleRightReleased();
+	void HandleRightReleased(float timeSeconds);
 
 private:
 	bool _isLeftPressed;
 	bool _isRightPressed;
+	float _leftLastPressedTime;
+	float _rightLastPressedTime;
 
 protected:
-	virtual void OnNothingToLeft(){ }
-	virtual void OnLeftToNothing(){ }
-	virtual void OnLeftToBoth(){ }
-	// TODO: virtual void OnDoubleLeft();
-	virtual void OnNothingToRight(){ }
-	virtual void OnRightToNothing(){ }
-	virtual void OnRightToBoth(){ }
-	// TODO: virtual void OnDoubleRight();
+	float GetLastLeftPressTime() const;
+	float GetLastRightPressTime() const;
+
+	virtual void OnNothingToLeft(float timeSeconds){ }
+	virtual void OnLeftToNothing(float timeSeconds){ }
+	virtual void OnLeftToBoth(float timeSeconds){ }
+	virtual void OnNothingToRight(float timeSeconds){ }
+	virtual void OnRightToNothing(float timeSeconds){ }
+	virtual void OnRightToBoth(float timeSeconds){ }
 
 	// TODO: do these make sense? 
 	// virtual void OnNothingToBoth();
 	// virtual void OnBothToNothing();
-	virtual void OnBothToLeft(){ }
-	virtual void OnBothToRight(){ }
+	virtual void OnBothToLeft(float timeSeconds){ }
+	virtual void OnBothToRight(float timeSeconds){ }
 };

@@ -4,11 +4,13 @@
 
 UBasicMovementBase::UBasicMovementBase():
 		_isLeftPressed(false),
-		_isRightPressed(false)
+		_isRightPressed(false),
+		_leftLastPressedTime(-10),
+		_rightLastPressedTime(-10)
 {
 }
 
-void UBasicMovementBase::HandleLeftPressed()
+void UBasicMovementBase::HandleLeftPressed(const float timeSeconds)
 {
 	if (_isLeftPressed)
 		return;
@@ -16,13 +18,16 @@ void UBasicMovementBase::HandleLeftPressed()
 	_isLeftPressed = true;
 
 	if (_isRightPressed)
-		OnRightToBoth();
+		OnRightToBoth(timeSeconds);
 
 	else
-		OnNothingToLeft();
+		OnNothingToLeft(timeSeconds);
+
+	_leftLastPressedTime = timeSeconds;
 }
 
-void UBasicMovementBase::HandleLeftReleased()
+// ReSharper disable once CppParameterNeverUsed
+void UBasicMovementBase::HandleLeftReleased(const float timeSeconds)
 {
 	if (!_isLeftPressed)
 		return;
@@ -30,13 +35,13 @@ void UBasicMovementBase::HandleLeftReleased()
 	_isLeftPressed = false;
 
 	if (_isRightPressed)
-		OnBothToRight();
+		OnBothToRight(timeSeconds);
 
 	else
-		OnLeftToNothing();
+		OnLeftToNothing(timeSeconds);
 }
 
-void UBasicMovementBase::HandleRightPressed()
+void UBasicMovementBase::HandleRightPressed(const float timeSeconds)
 {
 	if (_isRightPressed)
 		return;
@@ -44,13 +49,16 @@ void UBasicMovementBase::HandleRightPressed()
 	_isRightPressed = true;
 
 	if (_isLeftPressed)
-		OnLeftToBoth();
+		OnLeftToBoth(timeSeconds);
 
 	else
-		OnNothingToRight();
+		OnNothingToRight(timeSeconds);
+
+	_rightLastPressedTime = timeSeconds;
 }
 
-void UBasicMovementBase::HandleRightReleased()
+// ReSharper disable once CppParameterNeverUsed
+void UBasicMovementBase::HandleRightReleased(const float timeSeconds)
 {
 	if (!_isRightPressed)
 		return;
@@ -58,8 +66,18 @@ void UBasicMovementBase::HandleRightReleased()
 	_isRightPressed = false;
 
 	if (_isLeftPressed)
-		OnBothToLeft();
+		OnBothToLeft(timeSeconds);
 
 	else
-		OnRightToNothing();
+		OnRightToNothing(timeSeconds);
+}
+
+float UBasicMovementBase::GetLastLeftPressTime() const
+{
+	return _leftLastPressedTime;
+}
+
+float UBasicMovementBase::GetLastRightPressTime() const
+{
+	return _rightLastPressedTime;
 }

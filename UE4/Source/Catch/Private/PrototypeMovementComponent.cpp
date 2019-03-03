@@ -2,9 +2,17 @@
 
 #include "PrototypeMovementComponent.h"
 #include "GameFramework/Pawn.h"
+#include "Engine/World.h"
 
 UPrototypeMovementComponent::UPrototypeMovementComponent() :
-		_movementInputScale(1.0)
+		_moveState(EProtoMovementState::Idle),
+		_dashQueuedMovementState(EProtoMovementState::Idle),
+		_lastDashTimeSeconds(-10),
+		_movementInputScale(1.0),
+		_doublePressIntervalSeconds(.5),
+		_dashDurationSeconds(.25),
+		_postDashInputLag(.75),
+		_dashInputScale(7.5)
 {
 }
 
@@ -12,7 +20,7 @@ void UPrototypeMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto ownerActor = GetOwner();
+	const auto ownerActor = GetOwner();
 
 	if (!ensure(ownerActor))
 	{
@@ -32,8 +40,8 @@ void UPrototypeMovementComponent::BeginPlay()
 }
 
 void UPrototypeMovementComponent::TickComponent(
-	float deltaTime, 
-	ELevelTick tickType,
+	const float deltaTime,
+	const ELevelTick tickType,
 	FActorComponentTickFunction* thisTickFunction)
 {
 	Super::TickComponent(deltaTime, tickType, thisTickFunction);
@@ -41,14 +49,43 @@ void UPrototypeMovementComponent::TickComponent(
 	switch(_moveState)
 	{
 	case EProtoMovementState::Idle:
+		UE_LOG(LogTemp, Warning, TEXT("IDLE"));
 		break;
 
 	case EProtoMovementState::MovingLeft:
+		UE_LOG(LogTemp, Warning, TEXT("LEFT"));
 		_owner->AddMovementInput(FVector(-1.0, 0.0, 0.0), _movementInputScale);
 		break;
 
 	case EProtoMovementState::MovingRight:
+		UE_LOG(LogTemp, Warning, TEXT("RIGHT"));
 		_owner->AddMovementInput(FVector(1.0, 0.0, 0.0), _movementInputScale);
+		break;
+
+	case EProtoMovementState::DashLeft:
+		UE_LOG(LogTemp, Warning, TEXT("DASH LEFT"));
+		if (GetWorld()->GetTimeSeconds() - _lastDashTimeSeconds < _dashDurationSeconds)
+		{
+			_owner->AddMovementInput(FVector(-1.0, 0.0, 0.0), _dashInputScale);
+			break;
+		}
+		_moveState = EProtoMovementState::Dashing;
+		break;
+
+	case EProtoMovementState::DashRight:
+		UE_LOG(LogTemp, Warning, TEXT("DASH RIGHT"));
+		if (GetWorld()->GetTimeSeconds() - _lastDashTimeSeconds < _dashDurationSeconds)
+		{
+			_owner->AddMovementInput(FVector(1.0, 0.0, 0.0), _dashInputScale);
+			break;
+		}
+		_moveState = EProtoMovementState::Dashing;
+		break;
+
+	case EProtoMovementState::Dashing:
+		UE_LOG(LogTemp, Warning, TEXT("DASH LAG"));
+		if (GetWorld()->GetTimeSeconds() - _lastDashTimeSeconds > _dashDurationSeconds + _postDashInputLag)
+			_moveState = _dashQueuedMovementState;
 		break;
 
 	default:
@@ -57,35 +94,88 @@ void UPrototypeMovementComponent::TickComponent(
 	}
 }
 
-void UPrototypeMovementComponent::OnNothingToLeft()
+//INPUT STATE FUNCTIONS
+void UPrototypeMovementComponent::OnNothingToLeft(const float timeSeconds)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move state set left."));
+	if (_moveState == EProtoMovementState::Idle)
+	{
+		if (timeSeconds - GetLastLeftPressTime() < _doublePressIntervalSeconds)
+			IdleToDashingLeft(timeSeconds);
+		else
+			IdleToMovingLeft(timeSeconds);
+	}
+	else if (_moveState == EProtoMovementState::Dashing)
+		_dashQueuedMovementState = EProtoMovementState::MovingLeft;
+}
+
+void UPrototypeMovementComponent::OnNothingToRight(const float timeSeconds)
+{
+	if (_moveState == EProtoMovementState::Idle)
+	{
+		if (timeSeconds - GetLastRightPressTime() < _doublePressIntervalSeconds)
+			IdleToDashingRight(timeSeconds);
+		else
+			IdleToMovingRight(timeSeconds);
+	}
+	else if (_moveState == EProtoMovementState::Dashing)
+		_dashQueuedMovementState = EProtoMovementState::MovingRight;
+}
+
+void UPrototypeMovementComponent::OnLeftToNothing(const float timeSeconds)
+{
+	if (_moveState == EProtoMovementState::MovingLeft)
+		MovingLeftToIdle(timeSeconds);
+	else if (_moveState == EProtoMovementState::Dashing)
+		_dashQueuedMovementState = EProtoMovementState::Idle;
+}
+
+void UPrototypeMovementComponent::OnRightToNothing(const float timeSeconds)
+{
+	if (_moveState == EProtoMovementState::MovingRight)
+		MovingRightToIdle(timeSeconds);
+	else if (_moveState == EProtoMovementState::Dashing)
+		_dashQueuedMovementState = EProtoMovementState::Idle;
+}
+
+void UPrototypeMovementComponent::OnBothToLeft(const float timeSeconds)
+{
+	OnNothingToLeft(timeSeconds);
+}
+
+void UPrototypeMovementComponent::OnBothToRight(const float timeSeconds)
+{
+	OnNothingToRight(timeSeconds);
+}
+
+//CHARACTER STATE FUNCTIONS
+void UPrototypeMovementComponent::IdleToMovingLeft(const float timeSeconds)
+{
 	_moveState = EProtoMovementState::MovingLeft;
 }
 
-void UPrototypeMovementComponent::OnNothingToRight()
+void UPrototypeMovementComponent::IdleToMovingRight(const float timeSeconds)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move state set right."));
 	_moveState = EProtoMovementState::MovingRight;
 }
 
-void UPrototypeMovementComponent::OnLeftToNothing()
+void UPrototypeMovementComponent::MovingRightToIdle(const float timeSeconds)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move state set idle."));
 	_moveState = EProtoMovementState::Idle;
 }
 
-void UPrototypeMovementComponent::OnRightToNothing()
+void UPrototypeMovementComponent::MovingLeftToIdle(const float timeSeconds)
 {
-	OnLeftToNothing();
+	_moveState = EProtoMovementState::Idle;
 }
 
-void UPrototypeMovementComponent::OnBothToLeft()
+void UPrototypeMovementComponent::IdleToDashingLeft(const float timeSeconds)
 {
-	OnNothingToLeft();
+	_lastDashTimeSeconds = timeSeconds;
+	_moveState = EProtoMovementState::DashLeft;
 }
 
-void UPrototypeMovementComponent::OnBothToRight()
+void UPrototypeMovementComponent::IdleToDashingRight(const float timeSeconds)
 {
-	OnNothingToRight();
+	_lastDashTimeSeconds = timeSeconds;
+	_moveState = EProtoMovementState::DashRight;
 }
