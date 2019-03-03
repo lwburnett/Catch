@@ -25,5 +25,5 @@ FVector PrototypeBehavior::GetNextSpawnVector(const float spawnXMin, const float
 //TODO: Add in logic (mins and maxes??)
 FVector PrototypeBehavior::GetNextLaunchVector()
 {
-	return {1000, 0, 0};
+	return { FMath::FRandRange(-1000, 1000), 0, 0};
 }
