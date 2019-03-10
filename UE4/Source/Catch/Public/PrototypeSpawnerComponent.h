@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "EngineMinimal.h"
 #include "Components/ActorComponent.h"
 #include "BehaviorBase.h"
 #include "PrototypeSpawnerComponent.generated.h"
@@ -15,7 +15,7 @@ class CATCH_API UPrototypeSpawnerComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UPrototypeSpawnerComponent();
 
@@ -34,4 +34,8 @@ private:
 
 
 	TArray<TUniquePtr<BehaviorBase>> _behaviors;
+
+	TSubclassOf<AProjectile> FindClass(TCHAR* blueprintPath) const;
+
+	//static FText* _blueprintPath = TEXT("\\GameMode\\Blueprints\\PrototypeProjectile");
 };

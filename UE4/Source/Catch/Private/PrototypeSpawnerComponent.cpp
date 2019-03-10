@@ -11,6 +11,8 @@ UPrototypeSpawnerComponent::UPrototypeSpawnerComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+	
+	_projectileBlueprint = FindClass(TEXT_PASTE("Blueprint'/Game/GameMode/Blueprints/PrototypeProjectile.PrototypeProjectile_C'"));
 }
 
 
@@ -57,4 +59,12 @@ void UPrototypeSpawnerComponent::TickComponent(
 				});
 		}
 	}
+}
+
+TSubclassOf<AProjectile> UPrototypeSpawnerComponent::FindClass(TCHAR* blueprintPath) const
+{
+	if (const auto result = FindObject<UClass>(ANY_PACKAGE, blueprintPath))
+		return *static_cast<TSubclassOf<AProjectile>>(result);
+
+	return nullptr;
 }
