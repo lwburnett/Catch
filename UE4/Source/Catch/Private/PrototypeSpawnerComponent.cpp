@@ -12,7 +12,7 @@ UPrototypeSpawnerComponent::UPrototypeSpawnerComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 	
-	_projectileBlueprint = FindClass(TEXT_PASTE("Blueprint'/Game/GameMode/Blueprints/PrototypeProjectile.PrototypeProjectile_C'"));
+	_projectileBlueprint = FindClass(TEXT("Blueprint'/Game/GameMode/Blueprints/PrototypeProjectile.PrototypeProjectile_C'"));
 }
 
 
