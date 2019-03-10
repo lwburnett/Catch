@@ -58,6 +58,12 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float _dashInputScale;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float _maxRowSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float _maxDashSpeed;
+
 	void IdleToMovingLeft(float timeSeconds);
 	void IdleToMovingRight(float timeSeconds);
 	void MovingRightToIdle(float timeSeconds);

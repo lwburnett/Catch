@@ -9,10 +9,12 @@ UPrototypeMovementComponent::UPrototypeMovementComponent() :
 		_dashQueuedMovementState(EProtoMovementState::Idle),
 		_lastDashTimeSeconds(-10),
 		_movementInputScale(1.0),
-		_doublePressIntervalSeconds(.5),
+		_doublePressIntervalSeconds(.2),
 		_dashDurationSeconds(.25),
 		_postDashInputLag(.75),
-		_dashInputScale(7.5)
+		_dashInputScale(5.0),
+		_maxRowSpeed(300),
+		_maxDashSpeed(700)
 {
 }
 
@@ -37,6 +39,7 @@ void UPrototypeMovementComponent::BeginPlay()
 	}
 
 	_owner = owner;
+	MaxSwimSpeed = _maxRowSpeed;
 }
 
 void UPrototypeMovementComponent::TickComponent(
@@ -49,21 +52,17 @@ void UPrototypeMovementComponent::TickComponent(
 	switch(_moveState)
 	{
 	case EProtoMovementState::Idle:
-		UE_LOG(LogTemp, Warning, TEXT("IDLE"));
 		break;
 
 	case EProtoMovementState::MovingLeft:
-		UE_LOG(LogTemp, Warning, TEXT("LEFT"));
 		_owner->AddMovementInput(FVector(-1.0, 0.0, 0.0), _movementInputScale);
 		break;
 
 	case EProtoMovementState::MovingRight:
-		UE_LOG(LogTemp, Warning, TEXT("RIGHT"));
 		_owner->AddMovementInput(FVector(1.0, 0.0, 0.0), _movementInputScale);
 		break;
 
 	case EProtoMovementState::DashLeft:
-		UE_LOG(LogTemp, Warning, TEXT("DASH LEFT"));
 		if (GetWorld()->GetTimeSeconds() - _lastDashTimeSeconds < _dashDurationSeconds)
 		{
 			_owner->AddMovementInput(FVector(-1.0, 0.0, 0.0), _dashInputScale);
@@ -73,7 +72,6 @@ void UPrototypeMovementComponent::TickComponent(
 		break;
 
 	case EProtoMovementState::DashRight:
-		UE_LOG(LogTemp, Warning, TEXT("DASH RIGHT"));
 		if (GetWorld()->GetTimeSeconds() - _lastDashTimeSeconds < _dashDurationSeconds)
 		{
 			_owner->AddMovementInput(FVector(1.0, 0.0, 0.0), _dashInputScale);
@@ -83,9 +81,11 @@ void UPrototypeMovementComponent::TickComponent(
 		break;
 
 	case EProtoMovementState::Dashing:
-		UE_LOG(LogTemp, Warning, TEXT("DASH LAG"));
-		if (GetWorld()->GetTimeSeconds() - _lastDashTimeSeconds > _dashDurationSeconds + _postDashInputLag)
+		if (GetWorld()->GetTimeSeconds() - _lastDashTimeSeconds > _dashDurationSeconds + _postDashInputLag) 
+		{
 			_moveState = _dashQueuedMovementState;
+			MaxSwimSpeed = _maxRowSpeed;
+		}
 		break;
 
 	default:
@@ -172,10 +172,12 @@ void UPrototypeMovementComponent::IdleToDashingLeft(const float timeSeconds)
 {
 	_lastDashTimeSeconds = timeSeconds;
 	_moveState = EProtoMovementState::DashLeft;
+	MaxSwimSpeed = _maxDashSpeed;
 }
 
 void UPrototypeMovementComponent::IdleToDashingRight(const float timeSeconds)
 {
 	_lastDashTimeSeconds = timeSeconds;
-	_moveState = EProtoMovementState::DashRight;
+	_moveState = EProtoMovementState::DashRight; 
+	MaxSwimSpeed = _maxDashSpeed;
 }
